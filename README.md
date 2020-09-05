@@ -9,3 +9,6 @@ KU-polls is an application for conducting a multiple choice polls and surveys am
 [Vision Statement](https://github.com/Sahadporn/ku-polls/wiki/Vision-Statement)
 
 [Requirement](https://github.com/Sahadporn/ku-polls/wiki/Requirements)
+
+Iterations
+* [Iteration 1 Plan](https://github.com/Sahadporn/ku-polls/wiki/Iteration-1-Plan)
