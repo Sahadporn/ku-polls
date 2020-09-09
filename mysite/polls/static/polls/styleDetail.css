@@ -1,0 +1,42 @@
+li a {
+    color: darkblue;
+}
+
+body {
+    background: white url("images/ec8.jpg") no-repeat;
+    background-size: cover;
+}
+
+#title {
+    text-align: center;
+    color: rgb(94, 52, 5);
+    font-family: monospace;
+    padding-top: 20px;
+    font-size: 250%;
+    /* background-color: chartreuse; */
+}
+
+#choices {
+    color: rgb(122, 21, 21);
+    font-family: monospace;
+    margin: 320px;
+    margin-top: 10%;
+    width: 50%;
+    height: 50%;
+    padding-left: 70px;
+    padding-top: 10px;
+    font-size: 150%;
+    font-weight: bold;
+    /* background-color: rgb(248, 252, 235); */
+    border-radius: 5%;
+}
+
+#vote_box {
+    background-color: rgb(177, 235, 150);
+    font-family: monospace;
+    color: rgb(199, 68, 20);
+    margin-top: 10px;
+    border-radius: 5px;
+    border-color: rgb(48, 143, 4);
+    
+}
