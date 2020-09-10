@@ -40,3 +40,17 @@ body {
     border-color: rgb(48, 143, 4);
     
 }
+
+#vote_again {
+    background-color: rgb(177, 235, 150);
+    font-family: monospace;
+    color: rgb(199, 68, 20);
+    margin-top: 10px;
+    border-radius: 5px;
+    border-color: rgb(48, 143, 4);
+    text-decoration: none;   
+}
+
+#vote_again:hover {
+    color: deeppink;
+}
