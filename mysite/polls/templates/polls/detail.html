@@ -6,12 +6,14 @@
 </h1>
 
 <div id="choices">
-    {% if error_message %}
-        <p>
-            <strong>
-                {{ error_message }}
-            </strong>
-        </p>
+    {% if messages %}
+    <ul class="messages">
+        {% for msg in messages %}
+            <li class="{{msg.tags}}">
+                {{msg}}
+            </li>
+        {% endfor %}
+    </ul>
     {% endif %}
     
     <form action="{% url 'polls:vote' question.id %}" method="POST">
