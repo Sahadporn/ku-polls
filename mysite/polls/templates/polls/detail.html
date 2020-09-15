@@ -26,4 +26,7 @@
             {% endfor %}
         <input type="submit" value="Vote" id="vote_box">
     </form>
+    <a href="{% url 'polls:index' %}">
+        <input type="button" value="Back to Main Page">
+    </a>
 </div>
