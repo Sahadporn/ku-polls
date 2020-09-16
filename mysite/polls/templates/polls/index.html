@@ -1,6 +1,8 @@
 {% load static %}
 
 <link rel="stylesheet" type="text/css" href="{% static 'polls/style.css' %}">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 
 
 
@@ -26,12 +28,12 @@
             <li>
                     {{ question.question_text }}
                     {% if question.can_vote %}
-                        <a href="{% url 'polls:detail' question.id %}">
-                            <input type="button" value="vote">
+                        <a href="{% url 'polls:detail' question.id %}" style="text-decoration: none;">
+                            <button type="button" class="btn btn-success btn-sm">vote</button>
                         </a>
                     {% endif %}
-                    <a href="{% url 'polls:results' question.id %}">
-                        <input type="button" value="results">
+                    <a href="{% url 'polls:results' question.id %}" style="text-decoration: none;">
+                        <button type="button" class="btn btn-info btn-sm">results</button>
                     </a>
             </li>
             {% endfor %}

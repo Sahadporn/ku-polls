@@ -1,5 +1,7 @@
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'polls/styleDetail.css' %}">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 
 <h1 id="title">
     {{ question.question_text }}
@@ -27,6 +29,6 @@
         <input type="submit" value="Vote" id="vote_box">
     </form>
     <a href="{% url 'polls:index' %}">
-        <input type="button" value="Back to Main Page">
+        <button type="button" class="btn btn-secondary">Back to Main Page</button>
     </a>
 </div>

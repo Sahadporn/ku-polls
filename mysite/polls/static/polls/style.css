@@ -3,6 +3,8 @@ li a {
     text-decoration: none;
     font-family: 'Times New Roman', Times, serif;
     font-size: large;
+    /* background-color: aqua; */
+    marker: none;
 }
 
 li a:hover {
@@ -13,6 +15,11 @@ body {
     background: white url("images/7a.jpg") no-repeat;
     margin: 0%;
     padding: 0%;
+    /* color: rgb(216, 84, 32);
+    text-decoration: none;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: large;
+    marker: none; */
 }
 
 #sakura {
@@ -20,10 +27,17 @@ body {
     width: 35%;
 }
 
-#question {
+
+#question ul{
+    list-style-type: none;
+    text-decoration: none;
     float: right;
     width: 60%;
     margin-top: 60px;
     margin-right: 5%;
+    font-family: 'Times New Roman', Times, serif;
+    color: rgb(216, 84, 32);
+    /* background-color: blue; */
+
 }
 

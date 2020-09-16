@@ -7,7 +7,7 @@
     {{ question.question_text }}
 </h1>
 
-<div id="choices">
+<div id="choicesVote">
     <ul>
         <li>
             <!-- {{ choice.choice_text }} -- {{ choice.votes }}  -->
@@ -24,7 +24,7 @@
             {% endfor %}
             </table>
         </li>
-       <div id="column2" style="column-count: 2; column-fill: balance;">
+       <div id="column2">
            
            <a href="{% url 'polls:detail' question.id %}" style="text-decoration: none;">
                <!-- Vote again? -->
