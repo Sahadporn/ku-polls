@@ -1,5 +1,6 @@
 li a {
     color: darkblue;
+    list-style-type: none;
 }
 
 body {
@@ -13,13 +14,16 @@ body {
     font-family: monospace;
     padding-top: 20px;
     font-size: 250%;
+    font-weight: bolder;
     /* background-color: chartreuse; */
 }
 
-#choices {
+#choices ul{
+    list-style-type: none;
+    display: block;
     color: rgb(122, 21, 21);
     font-family: monospace;
-    margin: 320px;
+    margin: 25%;
     margin-top: 10%;
     width: 50%;
     height: 50%;
@@ -28,7 +32,19 @@ body {
     font-size: 150%;
     font-weight: bold;
     /* background-color: rgb(248, 252, 235); */
-    border-radius: 5%;
+}
+
+td {
+    color: rgb(122, 21, 21);
+    font-family: monospace;
+    margin-top: 10%;
+    width: 50%;
+    height: 50%;
+    /* padding-left: 70px; */
+    padding-top: 10px;
+    font-size: 150%;
+    font-weight: bold;
+    /* background-color: rgb(248, 252, 235); */
 }
 
 #vote_box {
@@ -41,16 +57,34 @@ body {
     
 }
 
-#vote_again {
+#column2 {
+    /* background-color: aqua; */
+    margin-top: 15%;
+    width: 100%;
+}
+
+/* #back button{
     background-color: rgb(177, 235, 150);
     font-family: monospace;
     color: rgb(199, 68, 20);
-    margin-top: 10px;
-    border-radius: 5px;
     border-color: rgb(48, 143, 4);
-    text-decoration: none;   
+} */
+
+#button1 {
+    margin-bottom: auto;
 }
 
-#vote_again:hover {
+/* #vote_again {
+    background-color: rgb(177, 235, 150);
+    font-family: monospace;
+    color: rgb(199, 68, 20);
+    margin-top: auto;
+    border-radius: 5px;
+    border-color: rgb(48, 143, 4);
+    text-decoration: none;  
+    padding-left: 7px; 
+} */
+
+/* #vote_again:hover {
     color: deeppink;
-}
+} */

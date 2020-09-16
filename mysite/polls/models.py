@@ -21,13 +21,13 @@ class Question(models.Model):
         # now = timezone.now()
         # if (self.end_date == False):
         #     return ""
-        return self.end_date >= timezone.now()
+        return self.end_date <= timezone.now()
 
     def is_published(self):
         return timezone.now() >= self.pub_date
     
     def can_vote(self):
-        if (self.is_published() and self.is_poll_end()):
+        if (self.is_published() and not self.is_poll_end()):
             return True
         return False
     

@@ -1,5 +1,7 @@
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'polls/styleDetail.css' %}">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 
 <h1 id="title">
     {{ question.question_text }}
@@ -7,17 +9,32 @@
 
 <div id="choices">
     <ul>
-        {% for choice in question.choice_set.all %}
         <li>
-            {{ choice.choice_text }} -- {{ choice.votes }} vote{{ choice.votes|pluralize }}
+            <!-- {{ choice.choice_text }} -- {{ choice.votes }}  -->
+            <table id="results">
+                <!-- <tr>
+                    <th>choice</th>
+                    <th>number of vote</th>
+                </tr> -->
+                {% for choice in question.choice_set.all %}
+            <tr>
+                <td>{{ choice.choice_text }}</td>
+                <td> -- {{ choice.votes }}</td>
+            </tr>
+            {% endfor %}
+            </table>
         </li>
-        {% endfor %}
+       <div id="column2" style="column-count: 2; column-fill: balance;">
+           
+           <a href="{% url 'polls:detail' question.id %}" style="text-decoration: none;">
+               <!-- Vote again? -->
+            <button type="button" class="btn btn-info" id="button1" style="margin-bottom:16px;">Vote again?</button>
+            </a><br>
+            <a href="{% url 'polls:index' %}" id="back">
+                <!-- <input type="button" value="Back to Main Page"> -->
+                <button type="button" class="btn btn-secondary">Back to Main Page</button>
+            </a>
+        </div> 
     </ul>
     
-    <a href="{% url 'polls:detail' question.id %}" id="vote_again">
-        Vote again?
-    </a>
-    <a href="{% url 'polls:index' %}">
-        <input type="button" value="Back to Main Page">
-    </a>
 </div>

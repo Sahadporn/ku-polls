@@ -41,7 +41,8 @@ class IndexView(generic.ListView):
         Return the last five published questions (not including those set to be published in the future).
         """
         published_polls = Question.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')[:5]
-        return published_polls
+        return Question.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')
+        # return published_polls
 
 class DetailView(generic.DetailView):
     model = Question
