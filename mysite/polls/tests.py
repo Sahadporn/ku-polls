@@ -53,6 +53,60 @@ class QuestionModelTests(TestCase):
         self.assertTrue(question.is_poll_end())
         self.assertFalse(question2.is_poll_end())
 
+    def test_is_published_when_past_published_date(self):
+        """
+        is_published() return True if current time already pass pub_date
+        """
+        pub_time = timezone.now() - datetime.timedelta(hours=23)
+        end_time = timezone.now() + datetime.timedelta(hours=40)
+        question = Question(pub_date=pub_time, end_date=end_time)
+        self.assertTrue(question.is_published())
+
+    def test_is_published_before_published_date(self):
+        """
+        is_published() return False if current time is before pub_date
+        """
+        pub_time = timezone.now() + datetime.timedelta(hours=23)
+        end_time = timezone.now() + datetime.timedelta(hours=40)
+        question = Question(pub_date=pub_time, end_date=end_time)
+        self.assertFalse(question.is_published())
+
+    def test_is_published_when_pub_date_is_now(self):
+        """
+        is_published() return True when pub_date equal current time.
+        """
+        pub_time = timezone.now()
+        end_time = timezone.now() + datetime.timedelta(hours=40)
+        question = Question(pub_date=pub_time, end_date=end_time)
+        self.assertTrue(question.is_published())
+
+    def test_can_vote_before_pub_date(self):
+        """
+        can_vote() return False when current time is before pub_date.
+        """
+        pub_time = timezone.now() + datetime.timedelta(hours=23)
+        end_time = timezone.now() + datetime.timedelta(hours=40)
+        question = Question(pub_date=pub_time, end_date=end_time)
+        self.assertFalse(question.can_vote())
+
+    def test_can_vote_after_pub_date(self):
+        """
+        can_vote() return True if current time pass pub_date.
+        """
+        pub_time = timezone.now() - datetime.timedelta(hours=23)
+        end_time = timezone.now() + datetime.timedelta(hours=40)
+        question = Question(pub_date=pub_time, end_date=end_time)
+        self.assertTrue(question.can_vote())
+
+    def test_can_vote_after_end_date(self):
+        """
+        can_vote() return False if current time pass end_date.
+        """
+        pub_time = timezone.now() - datetime.timedelta(hours=23)
+        end_time = timezone.now() - datetime.timedelta(hours=4)
+        question = Question(pub_date=pub_time, end_date=end_time)
+        self.assertFalse(question.can_vote())
+
     class QuestionIndexViewTests(TestCase):
 
         def test_no_question(self):
