@@ -19,14 +19,17 @@ from .models import Choice, Question
 #     context = {'latest_question_list': latest_question_list, }
 #     return render(request, 'polls/index.html', context)
 
-# def detail(request, question_id):
-#     # try:
-#     #     question = Question.objects.get(pk = question_id)
-#     # except Question.DoesNotExist:
-#     #     raise Http404("Question does not exist")
-#     # return render(request, 'polls/detail.html', {'question': question})
-#     question = get_object_or_404(Question, pk = question_id)
-#     return render(request, 'polls/detail.html', {'question': question})
+def detail(request, question_id):
+    # try:
+    #     question = Question.objects.get(pk = question_id)
+    # except Question.DoesNotExist:
+    #     raise Http404("Question does not exist")
+    # return render(request, 'polls/detail.html', {'question': question})
+    question = get_object_or_404(Question, pk=question_id)
+    if (not question.can_vote()):
+        messages.error(request, f"The '{question}' poll is already ended.")
+        return HttpResponseRedirect(reverse('polls:index'))
+    return render(request, 'polls/detail.html', {'question': question})
    
 # def results(request, question_id):
 #     question = get_object_or_404(Question, pk = question_id)
@@ -44,15 +47,15 @@ class IndexView(generic.ListView):
         return Question.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')
         # return published_polls
 
-class DetailView(generic.DetailView):
-    model = Question
-    template_name = 'polls/detail.html'
+# class DetailView(generic.DetailView):
+#     model = Question
+#     template_name = 'polls/detail.html'
 
-    def get_queryset(self):
-        """
-        Excludes any questions that aren't published yet.
-        """
-        return Question.objects.filter(pub_date__lte = timezone.now())
+#     def get_queryset(self):
+#         """
+#         Excludes any questions that aren't published yet.
+#         """
+#         return Question.objects.filter(pub_date__lte = timezone.now())
 
 class ResultsView(generic.DetailView):
     model = Question
@@ -60,10 +63,9 @@ class ResultsView(generic.DetailView):
 
 def vote(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
-    # if (question.end_date <= timezone.now()):
-    if (question.is_poll_end()):
-        messages.error(request, f"This poll is already ended.")
-        return HttpResponseRedirect(reverse('polls:index'))
+    # if (question.is_poll_end()):
+    #     messages.error(request, f"This poll is already ended.")
+    #     return HttpResponseRedirect(reverse('polls:index'))
     try:
         selected_choice = question.choice_set.get(pk = request.POST['choice'])
     except (KeyError, Choice.DoesNotExist):
