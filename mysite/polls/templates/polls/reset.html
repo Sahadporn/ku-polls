@@ -1,0 +1,41 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'polls/style.css' %}">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
+<div id="question">
+
+    {% if messages %}
+    <ul class="messages">
+        {% for msg in messages %}
+      
+            {{msg}}
+    
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if question_list %}
+    <ul>
+        {% for question in question_list %}
+        <p>
+            <li>
+                {{ question.question_text }}
+                {{ question.total_votes }}
+                <a href="{% url 'polls:results' question.id %}" style="text-decoration: none;">
+                    <button type="button" class="btn btn-success btn-sm">results</button>
+                </a>
+                <a href="{% url 'polls:reset' question.id %}" style="text-decoration: none;">
+                    <button type="button" class="btn btn-danger btn-sm">reset</button>
+                </a>
+            </li>
+        </p>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>
+        No polls are available.
+    </p>
+    {% endif %}
+</div>

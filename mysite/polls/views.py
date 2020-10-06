@@ -2,14 +2,12 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.http import Http404
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
 from django.contrib import messages
-
 from .models import Choice, Question
-
 
 # def index(request):
 #     latest_question_list = Question.objects.order_by('-pub_date')[:5]
@@ -30,7 +28,7 @@ def detail(request, question_id):
         messages.error(request, f"The '{question}' poll is already ended.")
         return HttpResponseRedirect(reverse('polls:index'))
     return render(request, 'polls/detail.html', {'question': question})
-   
+
 # def results(request, question_id):
 #     question = get_object_or_404(Question, pk = question_id)
 #     return render(request, 'polls/results.html', {'question': question})
@@ -68,14 +66,30 @@ def vote(request, question_id):
     #     messages.error(request, f"This poll is already ended.")
     #     return HttpResponseRedirect(reverse('polls:index'))
     try:
-        selected_choice = question.choice_set.get(pk = request.POST['choice'])
+        selected_choice = question.choice_set.get(pk=request.POST['choice'])
     except (KeyError, Choice.DoesNotExist):
         # Redisplay the question voting form
-        messages.error(request, f"You didn't make a choice")
-        return render(request, 'polls/detail.html', {
-            'question': question,
-            })
+        messages.error(request, f'{"You didn't make a choice"}')
+        return render(request, 'polls/detail.html', {'question': question, })
     else:
         selected_choice.votes += 1
         selected_choice.save()
-        return HttpResponseRedirect(reverse('polls:results', args = (question.id,)))
+        return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
+
+
+class resetView(generic.ListView):
+    template_name = 'polls/reset.html'
+    context_object_name = 'question_list'
+
+    def get_queryset(self):
+        """
+        Return the last five published questions (not including those set to be published in the future).
+        """
+        return Question.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')
+
+def reset(request, question_id):
+    q = get_object_or_404(Question, pk=question_id)
+    q.reset_votes()
+    messages.info(request, f"Reset votes for poll {q.question_text}")
+    return HttpResponseRedirect(reverse('polls:reset_index'))
+    # return render(request, reverse('polls:reset_index'))

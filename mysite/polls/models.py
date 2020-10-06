@@ -27,9 +27,22 @@ class Question(models.Model):
         return timezone.now() >= self.pub_date
     
     def can_vote(self):
-        if (self.is_published() and not self.is_poll_end()):
+        if self.is_published() and not self.is_poll_end():
             return True
         return False
+    
+    def total_votes(self):
+        # sum = 0
+        # for choice in self.choice_set.all():
+        #     sum += choice.votes
+        # return sum
+        votes = self.choice_set.aggregate(models.Sum('votes'))
+        return votes['votes__sum']
+    
+    def reset_votes(self):
+        for choice in self.choice_set.all():
+            choice.votes = 0
+            choice.save()
     
     # modify column view in admin - see list_display
     was_published_recently.admin_order_field = 'pub_date'
