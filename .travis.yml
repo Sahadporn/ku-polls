@@ -7,10 +7,18 @@ python: "3.7"
 git:
   depth: 1
 
+services:
+  - sqlite3
+
+env:
+  -DJANGO=3.1.2 DB=sqlite3
+
 # Install any dependencies
 install:
   - pip install -r requirements.txt
     
+before_script:
+  - sqlite3 -e 'create database test;' -u root
 # script to run tests. Script can have many commands, one per line.
 script: 
     - coverage run manage.py test
