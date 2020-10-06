@@ -10,9 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
-from decouple import config 
+from decouple import config
 from pathlib import Path
-import os
+# import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
@@ -22,13 +22,13 @@ BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-#SECRET_KEY = os.getenv('SECRET_KEY')
+# SECRET_KEY = os.getenv('SECRET_KEY')
 # SECRET_KEY='yw-=5-i!f#z4&pk)a2+9(#v$re)9nk8gr6tth^u$_=ss7l6_#j'
-SECRET_KEY=config('SECRET_KEY')
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-#DEBUG = bool(os.getenv('DEBUG', 'False'))
-DEBUG=config('DEBUG', default=False, cast=bool)
+# DEBUG = bool(os.getenv('DEBUG', 'False'))
+DEBUG = config('DEBUG', default=False, cast=bool)
 
 
 ALLOWED_HOSTS = []
@@ -112,8 +112,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-#TIME_ZONE = os.getenv('TIME_ZONE', 'UTC')
-TIME_ZONE='Asia/Bangkok'
+# TIME_ZONE = os.getenv('TIME_ZONE', 'UTC')
+TIME_ZONE = 'Asia/Bangkok'
 # TIME_ZONE = 'UTC'
 
 USE_I18N = True
