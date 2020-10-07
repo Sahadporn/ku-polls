@@ -11,18 +11,18 @@ services:
   - sqlite3
 
 env:
-  - DJANGO=3.1.2 DB=sqlite3
-  - DJANGO=3.0 DB=mysql
+  - DJANGO=3.1.2 DB=mysql
 
 # Install any dependencies
 install:
   - pip install -r requirements.txt
     
 before_script:
-  - mysql -e 'create database test;' -u root
+  - cp .env .example .env
+  - python manage.py migrate
 # script to run tests. Script can have many commands, one per line.
 script: 
-    - coverage run manage.py test
+    - coverage run manage.py test polls
 
 after_script:
     - bash <(curl -s https://codecov.io/bash)
