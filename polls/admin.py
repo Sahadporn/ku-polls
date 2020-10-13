@@ -1,3 +1,4 @@
+"""Admin setup for poll application."""
 from django.contrib import admin
 
 from .models import Choice, Question

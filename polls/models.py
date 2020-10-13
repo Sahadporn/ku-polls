@@ -1,3 +1,4 @@
+"""Question and Choice model for poll application."""
 import datetime
 
 from django.db import models
@@ -13,6 +14,7 @@ class Question(models.Model):
     end_date = models.DateTimeField('ending date')
 
     def __str__(self):
+        """Return question as string."""
         return self.question_text
 
     def was_published_recently(self):
@@ -54,4 +56,5 @@ class Choice(models.Model):
     votes = models.IntegerField(default=0)
 
     def __str__(self):
+        """Return choice as string."""
         return self.choice_text
