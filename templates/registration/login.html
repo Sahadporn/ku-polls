@@ -1,0 +1,25 @@
+{% load static %}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
+
+<html>
+
+<body style="background-color: rgb(183, 220, 221);">
+
+    <div style="margin: 5%;">
+    <h2>KU-polls Login</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <p>
+            <input type="submit" class="btn btn-primary" value="Login" />
+        </p>
+        <input type="hidden" name="next" value="{{next}}" />
+    </form>
+
+    </div>
+</body>
+
+</html>

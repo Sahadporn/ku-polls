@@ -7,8 +7,21 @@
 
 
     <div id="sakura">
-
         <img src="https://media2.giphy.com/media/t988uufli2JPfNoShM/source.gif" width="100%">
+    </div>
+    <div style="float: right; padding-right: 4px;">
+        <div class="row m-2">
+        {% if user.is_authenticated %}
+                <h3 style="padding-right: 16px">Welcome {{ user.first_name }}</h3>
+                <a href="{% url 'logout' %}" style="text-decoration: none;">
+                    <button type="button" class="btn btn-danger btn-lg">Log out</button>
+                </a>
+        {% else %}
+                <a href="{% url 'login' %}" style="text-decoration: none;">
+                    <button type="button" class="btn btn-primary btn-lg">Log in</button>
+                </a>
+        {% endif %}
+        </div>
     </div>
 
     <div id="question">
@@ -21,7 +34,7 @@
             {% endfor %}
         </ul>
         {% endif %}
-
+        
         {% if latest_question_list %}
         <ul>
             {% for question in latest_question_list %}

@@ -21,11 +21,15 @@
     <form action="{% url 'polls:vote' question.id %}" method="POST">
         {% csrf_token %}
         {% for choice in question.choice_set.all %}
-            <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
-                <label for="choice{{ forloop.counter }}">
-                    {{ choice.choice_text }}
-                </label><br>
-            {% endfor %}
+            {% if choice.id is question.vote.selected_choice_id %}
+                <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}" checked="checked">
+            {% else %}
+                <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
+            {% endif %}
+                    <label for="choice{{ forloop.counter }}">
+                        {{ choice.choice_text }}
+                    </label><br>
+        {% endfor %}
         <input type="submit" value="Vote" id="vote_box">
     </form>
     <a href="{% url 'polls:index' %}">

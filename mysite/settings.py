@@ -74,6 +74,8 @@ TEMPLATES = [
     },
 ]
 
+LOGIN_REDIRECT_URL = 'polls:index'
+
 WSGI_APPLICATION = 'mysite.wsgi.application'
 
 

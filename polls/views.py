@@ -5,8 +5,9 @@ from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
-from .models import Choice, Question
+from .models import Choice, Question, Vote
 
 
 # def index(request):
@@ -74,6 +75,7 @@ class ResultsView(generic.DetailView):
     template_name = 'polls/results.html'
 
 
+@login_required
 def vote(request, question_id):
     """Return HttpResponse object to results page for specific question.
 
@@ -97,6 +99,22 @@ def vote(request, question_id):
         return render(request, 'polls/detail.html', {
             'question': question, })
     else:
+        if question.vote is None:
+            vote = Vote.objects.create(user=request.user, voted=False)
+            question.vote = vote
+            question.save()
+        else:
+            vote = question.vote
+            
+            if vote.is_voted():
+                prev_choice = question.choice_set.get(pk=vote.selected_choice_id)
+                prev_choice.votes -= 1
+                prev_choice.save()
+                vote.voted = False
+   
         selected_choice.votes += 1
+        vote.voted = True
+        vote.selected_choice_id = selected_choice.id
+        vote.save()
         selected_choice.save()
         return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))

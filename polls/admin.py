@@ -11,6 +11,10 @@ class ChoiceInline(admin.TabularInline):
     extra = 3
 
 
+class ChoiceAdmin(admin.ModelAdmin):
+    readonly_fields = ('votes',)
+
+
 class QuestionAdmin(admin.ModelAdmin):
     """Question form setting for admin page."""
 
@@ -26,4 +30,4 @@ class QuestionAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Question, QuestionAdmin)
-# admin.site.register(Choice)
+admin.site.register(Choice, ChoiceAdmin)

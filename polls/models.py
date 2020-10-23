@@ -3,6 +3,19 @@ import datetime
 
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth.models import User
+
+
+class Vote(models.Model):
+    """Vote model for vote each user have."""
+
+    user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
+    voted = models.BooleanField(default=False)
+    value = models.IntegerField(default=0)
+    selected_choice_id = models.IntegerField(default=0)
+
+    def is_voted(self):
+        return self.voted
 
 
 class Question(models.Model):
@@ -12,6 +25,7 @@ class Question(models.Model):
     pub_date = models.DateTimeField('date published')
     # end_date = models.DateTimeField('ending date', null=True, blank=True)
     end_date = models.DateTimeField('ending date')
+    vote = models.ForeignKey(Vote, null=True, blank=True, on_delete=models.CASCADE)
 
     def __str__(self):
         """Return question as string."""
@@ -24,9 +38,6 @@ class Question(models.Model):
 
     def is_poll_end(self):
         """Return true is time already pass question end date."""
-        # now = timezone.now()
-        # if (self.end_date == False):
-        #     return ""
         return self.end_date <= timezone.now()
 
     def is_published(self):
@@ -54,6 +65,7 @@ class Choice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     choice_text = models.CharField(max_length=200)
     votes = models.IntegerField(default=0)
+    # vote = models.ForeignKey(Vote, null=True, blank=True, on_delete=models.CASCADE)
 
     def __str__(self):
         """Return choice as string."""
