@@ -1,4 +1,5 @@
 """View for django poll application."""
+import logging
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
@@ -9,15 +10,51 @@ from django.contrib.auth.decorators import login_required
 
 from .models import Choice, Question, Vote
 
+logging.config.dictConfig({
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'console': {
+            'format': '[%(asctime)s] %(levelname)-2s %(message)s'
+        },
+        'file': {
+            'format': '[%(asctime)s] %(name)-12s %(levelname)-8s %(message)s'
+        }
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'console'
+        },
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'formatter': 'file',
+            'filename': '/tmp/debug.log'
+        }
+    },
+    'loggers': {
+        '': {
+            'level': 'DEBUG',
+            'handlers': ['console', 'file']
+        }
+    }
+})
 
-# def index(request):
-#     latest_question_list = Question.objects.order_by('-pub_date')[:5]
-#     # template = loader.get_template('polls/index.html')
-#     # context = { 'latest_question_list': latest_question_list, }
-#     # return HttpResponse(template.render(context, request))
-#     context = {'latest_question_list': latest_question_list, }
-#     return render(request, 'polls/index.html', context)
+logging.basicConfig(format=format)
+logger = logging.getLogger(__name__)
 
+
+def get_client_ip(request):
+    """Return: user ip address."""
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[-1].strip()
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
+
+@login_required
 def detail(request, question_id):
     """Return HttpResponse object direct to detail page.
 
@@ -29,20 +66,19 @@ def detail(request, question_id):
         if question cannot vote return redirect to index page
         else return HttpResponse object to detail page
     """
-    # try:
-    #     question = Question.objects.get(pk = question_id)
-    # except Question.DoesNotExist:
-    #     raise Http404("Question does not exist")
-    # return render(request, 'polls/detail.html', {'question': question})
     question = get_object_or_404(Question, pk=question_id)
     if (not question.can_vote()):
         messages.error(request, f"The '{question}' poll is already ended.")
         return HttpResponseRedirect(reverse('polls:index'))
-    return render(request, 'polls/detail.html', {'question': question})
 
-# def results(request, question_id):
-#     question = get_object_or_404(Question, pk = question_id)
-#     return render(request, 'polls/results.html', {'question': question})
+    vote = Vote.objects.filter(question_id=question.id, user=request.user)
+    if not vote.exists():
+        vote = Vote.objects.create(user=request.user, voted=False, question_id=question.id)
+        return render(request, 'polls/detail.html', {'question': question})
+    else:
+        vote = vote[:1].get()
+        question.vote = vote
+    return render(request, 'polls/detail.html', {'question': question})
 
 
 class IndexView(generic.ListView):
@@ -53,19 +89,7 @@ class IndexView(generic.ListView):
 
     def get_queryset(self):
         """Return the last five published questions (not including those set to be published in the future)."""
-        # published_polls = Question.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')[:5]
         return Question.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')
-        # return published_polls
-
-# class DetailView(generic.DetailView):
-#     model = Question
-#     template_name = 'polls/detail.html'
-
-#     def get_queryset(self):
-#         """
-#         Excludes any questions that aren't published yet.
-#         """
-#         return Question.objects.filter(pub_date__lte = timezone.now())
 
 
 class ResultsView(generic.DetailView):
@@ -88,9 +112,6 @@ def vote(request, question_id):
         else redirect to results page for specific question
     """
     question = get_object_or_404(Question, pk=question_id)
-    # if (question.is_poll_end()):
-    #     messages.error(request, f"This poll is already ended.")
-    #     return HttpResponseRedirect(reverse('polls:index'))
     try:
         selected_choice = question.choice_set.get(pk=request.POST['choice'])
     except (KeyError, Choice.DoesNotExist):
@@ -99,22 +120,16 @@ def vote(request, question_id):
         return render(request, 'polls/detail.html', {
             'question': question, })
     else:
-        if question.vote is None:
-            vote = Vote.objects.create(user=request.user, voted=False)
-            question.vote = vote
-            question.save()
-        else:
-            vote = question.vote
-            
-            if vote.is_voted():
-                prev_choice = question.choice_set.get(pk=vote.selected_choice_id)
-                prev_choice.votes -= 1
-                prev_choice.save()
-                vote.voted = False
-   
-        selected_choice.votes += 1
-        vote.voted = True
-        vote.selected_choice_id = selected_choice.id
-        vote.save()
-        selected_choice.save()
+        vote = Vote.get_or_new(question.id, request.user)
+        if vote.selected_choice_id != 0:
+            prev_choice = question.choice_set.get(pk=vote.selected_choice_id)
+            if selected_choice.id == prev_choice.id:
+                return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
+            prev_choice.decrease_vote()
+
+        selected_choice.increase_vote()
+        vote.save_choice(selected_choice.id)
+
+        logger.info("IP: %s Username: %s Poll id: %d vote success", get_client_ip(request),
+                    request.user.username, question_id)
         return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
